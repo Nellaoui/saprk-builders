@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spark Builders Admin | Reservations</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="assets/spark-builders-icon.png">
+  <style>
+    :root {
+      --teal: #1ec9b7;
+      --teal-dark: #088f85;
+      --gold: #d4b024;
+      --charcoal: #1f232b;
+      --ink: #10141c;
+      --muted: #69717f;
+      --off-white: #f7f8f6;
+      --line: rgba(31, 35, 43, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(30, 201, 183, 0.14), transparent 34%),
+        linear-gradient(315deg, rgba(212, 176, 36, 0.14), transparent 34%),
+        var(--off-white);
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .admin-header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 248, 246, 0.94);
+      backdrop-filter: blur(16px);
+    }
+
+    .admin-nav {
+      width: min(1180px, calc(100% - 32px));
+      min-height: 70px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-logo {
+      display: block;
+      width: clamp(140px, 13vw, 180px);
+      height: auto;
+    }
+
+    .back-link,
+    .button,
+    .small-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .back-link {
+      min-height: 40px;
+      padding: 0 12px;
+      color: var(--charcoal);
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 54px 0 80px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--teal-dark);
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 3px;
+      background: var(--teal);
+    }
+
+    h1,
+    h2,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 14px;
+      font-size: clamp(2.4rem, 6vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    .lede {
+      max-width: 740px;
+      color: #414957;
+      font-size: 1.1rem;
+      font-weight: 650;
+    }
+
+    .panel {
+      margin-top: 28px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 14px 42px rgba(16, 20, 28, 0.08);
+    }
+
+    .login-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      max-width: 560px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--charcoal);
+      font-size: 0.84rem;
+      font-weight: 900;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    input {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      color: var(--ink);
+    }
+
+    .button {
+      min-height: 48px;
+      padding: 0 18px;
+      border: 0;
+      background: var(--charcoal);
+      color: white;
+      box-shadow: 0 12px 28px rgba(31, 35, 43, 0.2);
+    }
+
+    .status {
+      min-height: 24px;
+      margin-top: 14px;
+      color: var(--teal-dark);
+      font-weight: 800;
+    }
+
+    .reservations-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .reservations-head h2 {
+      margin-bottom: 0;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      line-height: 1;
+    }
+
+    .reservations-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .small-button {
+      min-height: 38px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      background: var(--off-white);
+      color: var(--charcoal);
+    }
+
+    .small-button.danger {
+      color: #a92828;
+    }
+
+    .reservation-count {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--charcoal);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      background: var(--off-white);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .empty-reservations {
+      padding: 18px;
+      color: var(--muted);
+      font-weight: 800;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .locked-note {
+      max-width: 640px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 640px) {
+      .admin-nav {
+        align-items: flex-start;
+        padding: 15px 0;
+      }
+
+      .brand-logo {
+        width: clamp(118px, 36vw, 145px);
+      }
+
+      .login-grid,
+      .reservations-head {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <nav class="admin-nav" aria-label="Admin navigation">
+      <a href="index.html#top" aria-label="Spark Builders home">
+        <img class="brand-logo" src="assets/spark-builders-logo.png" alt="Spark Builders">
+      </a>
+      <a class="back-link" href="index.html#register">Back to site</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eyebrow">Admin</div>
+    <h1>Reservations</h1>
+    <p class="lede">View saved Spark Builders seat requests, export them as CSV, or clear test entries.</p>
+
+    <section class="panel" id="loginPanel">
+      <h2>Admin access</h2>
+      <label for="adminPasscode">Passcode</label>
+      <div class="login-grid">
+        <input id="adminPasscode" type="password" autocomplete="current-password" placeholder="Enter passcode">
+        <button class="button" type="button" id="unlockAdmin">Open admin</button>
+      </div>
+      <div class="status" id="loginStatus" role="status" aria-live="polite"></div>
+      <p class="locked-note">Default passcode: <strong>spark2026</strong>. This hides the page from normal visitors, but a static website passcode is not real server security.</p>
+    </section>
+
+    <section class="panel" id="adminPanel" hidden>
+      <div class="reservations-head">
+        <div>
+          <div class="eyebrow">Saved Requests</div>
+          <h2>Reservation list</h2>
+        </div>
+        <div class="reservations-actions">
+          <span class="reservation-count" id="reservationCount">0 saved</span>
+          <button class="small-button" type="button" id="exportReservations">Export CSV</button>
+          <button class="small-button danger" type="button" id="clearReservations">Clear</button>
+        </div>
+      </div>
+      <div id="reservationsEmpty" class="empty-reservations">No reservations yet. New requests submitted from this browser will appear here.</div>
+      <div class="table-wrap" id="reservationsTableWrap" hidden>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Parent</th>
+              <th>Age</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody id="reservationsBody"></tbody>
+        </table>
+      </div>
+      <div class="status" id="adminStatus" role="status" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script>
+    const adminPasscode = "spark2026";
+    const reservationsKey = "sparkBuildersReservations";
+    const loginPanel = document.querySelector("#loginPanel");
+    const adminPanel = document.querySelector("#adminPanel");
+    const passcodeInput = document.querySelector("#adminPasscode");
+    const unlockButton = document.querySelector("#unlockAdmin");
+    const loginStatus = document.querySelector("#loginStatus");
+    const adminStatus = document.querySelector("#adminStatus");
+    const reservationsBody = document.querySelector("#reservationsBody");
+    const reservationsEmpty = document.querySelector("#reservationsEmpty");
+    const reservationsTableWrap = document.querySelector("#reservationsTableWrap");
+    const reservationCount = document.querySelector("#reservationCount");
+    const exportButton = document.querySelector("#exportReservations");
+    const clearButton = document.querySelector("#clearReservations");
+
+    const escapeHtml = (value) => String(value || "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;"
+    }[char]));
+
+    const loadReservations = () => {
+      try {
+        return JSON.parse(localStorage.getItem(reservationsKey)) || [];
+      } catch {
+        return [];
+      }
+    };
+
+    const saveReservations = (reservations) => {
+      localStorage.setItem(reservationsKey, JSON.stringify(reservations));
+    };
+
+    const renderReservations = () => {
+      const reservations = loadReservations();
+      reservationCount.textContent = `${reservations.length} saved`;
+      reservationsEmpty.hidden = reservations.length > 0;
+      reservationsTableWrap.hidden = reservations.length === 0;
+      reservationsBody.innerHTML = reservations.map((entry) => `
+        <tr>
+          <td>${escapeHtml(entry.date)}</td>
+          <td>${escapeHtml(entry.parentName)}</td>
+          <td>${escapeHtml(entry.studentAge)}</td>
+          <td><a href="mailto:${escapeHtml(entry.email)}">${escapeHtml(entry.email)}</a></td>
+          <td><a href="tel:${escapeHtml(entry.phone)}">${escapeHtml(entry.phone)}</a></td>
+          <td>${escapeHtml(entry.message)}</td>
+        </tr>
+      `).join("");
+    };
+
+    const csvCell = (value) => `"${String(value || "").replace(/"/g, '""')}"`;
+
+    const exportReservations = () => {
+      const reservations = loadReservations();
+      if (!reservations.length) {
+        adminStatus.textContent = "No reservations to export yet.";
+        return;
+      }
+
+      const headers = ["Date", "Parent name", "Student age", "Email", "Phone", "Message"];
+      const rows = reservations.map((entry) => [
+        entry.date,
+        entry.parentName,
+        entry.studentAge,
+        entry.email,
+        entry.phone,
+        entry.message
+      ]);
+      const csv = [headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "spark-builders-reservations.csv";
+      link.click();
+      URL.revokeObjectURL(link.href);
+      adminStatus.textContent = "CSV exported.";
+    };
+
+    const unlockAdmin = () => {
+      if (passcodeInput.value !== adminPasscode) {
+        loginStatus.textContent = "Wrong passcode.";
+        return;
+      }
+
+      sessionStorage.setItem("sparkBuildersAdminUnlocked", "true");
+      loginPanel.hidden = true;
+      adminPanel.hidden = false;
+      renderReservations();
+    };
+
+    unlockButton.addEventListener("click", unlockAdmin);
+    passcodeInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        unlockAdmin();
+      }
+    });
+
+    exportButton.addEventListener("click", exportReservations);
+
+    clearButton.addEventListener("click", () => {
+      if (!loadReservations().length) {
+        adminStatus.textContent = "There are no reservations to clear.";
+        return;
+      }
+
+      if (confirm("Clear all saved reservations on this browser?")) {
+        saveReservations([]);
+        renderReservations();
+        adminStatus.textContent = "All saved reservations were cleared.";
+      }
+    });
+
+    if (sessionStorage.getItem("sparkBuildersAdminUnlocked") === "true") {
+      loginPanel.hidden = true;
+      adminPanel.hidden = false;
+      renderReservations();
+    }
+  </script>
+</body>
+</html>

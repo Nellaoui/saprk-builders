@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spark Builders | 3-Day Robotics Workshop in Casablanca</title>
+  <meta name="description" content="Spark Builders is a 3-day hands-on robotics and coding workshop for kids ages 11-16 in Casablanca. No experience needed.">
+  <link rel="icon" type="image/png" href="assets/spark-builders-icon.png">
+  <link rel="apple-touch-icon" href="assets/spark-builders-icon.png">
+  <style>
+    :root {
+      --teal: #1ec9b7;
+      --teal-dark: #088f85;
+      --gold: #d4b024;
+      --charcoal: #1f232b;
+      --ink: #10141c;
+      --muted: #69717f;
+      --off-white: #f7f8f6;
+      --paper: #ffffff;
+      --magenta: #e85aae;
+      --line: rgba(31, 35, 43, 0.14);
+      --shadow: 0 20px 70px rgba(16, 20, 28, 0.13);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--off-white);
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(247, 248, 246, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      min-width: 170px;
+    }
+
+    .brand-logo {
+      display: block;
+      width: clamp(140px, 13vw, 180px);
+      height: auto;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+
+    .nav-links a {
+      padding: 10px 12px;
+      border-radius: 999px;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--charcoal);
+      background: rgba(30, 201, 183, 0.11);
+      outline: none;
+    }
+
+    .nav-cta,
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--charcoal);
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(31, 35, 43, 0.2);
+    }
+
+    .button.secondary {
+      background: white;
+      color: var(--charcoal);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(118deg, rgba(247, 248, 246, 1) 0 48%, rgba(30, 201, 183, 0.1) 48% 100%),
+        linear-gradient(165deg, transparent 0 70%, rgba(212, 176, 36, 0.2) 70% 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-inner {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: calc(100vh - 76px);
+      max-height: 900px;
+      padding: 80px 0 44px;
+      display: grid;
+      grid-template-columns: minmax(0, 0.98fr) minmax(340px, 0.72fr);
+      align-items: center;
+      gap: 44px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--teal-dark);
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 3px;
+      background: var(--teal);
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 20px;
+      font-size: clamp(3.2rem, 8vw, 7.1rem);
+      line-height: 0.88;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .highlight {
+      color: var(--teal-dark);
+    }
+
+    .hero-copy {
+      max-width: 650px;
+      margin-bottom: 28px;
+      color: #414957;
+      font-size: clamp(1.1rem, 2vw, 1.34rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(94px, 1fr));
+      max-width: 690px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 12px 40px rgba(16, 20, 28, 0.08);
+    }
+
+    .stat {
+      min-height: 108px;
+      padding: 18px 14px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border-right: 1px solid var(--line);
+    }
+
+    .stat:last-child {
+      border-right: 0;
+    }
+
+    .stat strong {
+      color: var(--teal-dark);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      line-height: 1;
+    }
+
+    .stat span {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .hero-panel {
+      align-self: end;
+      padding: 26px;
+      background: var(--charcoal);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      color: white;
+    }
+
+    .lab-visual {
+      position: relative;
+      min-height: 430px;
+      overflow: hidden;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+        radial-gradient(circle at 76% 14%, rgba(212, 176, 36, 0.32), transparent 28%),
+        var(--ink);
+      background-size: 28px 28px, 28px 28px, auto, auto;
+    }
+
+    .spark-icon {
+      position: absolute;
+      left: 50%;
+      top: 28px;
+      width: min(72%, 300px);
+      aspect-ratio: 1;
+      transform: translateX(-50%);
+      object-fit: contain;
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 22px 56px rgba(0, 0, 0, 0.26);
+    }
+
+    .robot-card {
+      position: absolute;
+      left: 34px;
+      right: 34px;
+      bottom: 34px;
+      padding: 22px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--charcoal);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+    }
+
+    .circuit-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .circuit-chip {
+      min-height: 58px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--off-white);
+    }
+
+    .circuit-chip strong {
+      display: block;
+      color: var(--teal-dark);
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .circuit-chip span {
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 750;
+    }
+
+    .panel-note {
+      margin: 18px 0 0;
+      color: rgba(255, 255, 255, 0.78);
+      font-weight: 700;
+    }
+
+    section {
+      padding: 86px 0;
+    }
+
+    .section-inner {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 34px;
+    }
+
+    .section-head h2 {
+      margin-bottom: 0;
+      max-width: 680px;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      max-width: 420px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .feature {
+      min-height: 220px;
+      padding: 24px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 14px 30px rgba(31, 35, 43, 0.06);
+    }
+
+    .icon {
+      width: 46px;
+      height: 46px;
+      margin-bottom: 22px;
+      display: grid;
+      place-items: center;
+      border: 2px solid currentColor;
+      border-radius: 8px;
+      color: var(--teal-dark);
+      font-size: 1.45rem;
+      font-weight: 900;
+    }
+
+    .feature:nth-child(2) .icon,
+    .feature:nth-child(6) .icon {
+      color: var(--gold);
+    }
+
+    .feature:nth-child(4) .icon {
+      color: var(--magenta);
+    }
+
+    .feature h3 {
+      margin-bottom: 10px;
+      font-size: 1.08rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .feature p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .agenda {
+      background: var(--charcoal);
+      color: white;
+    }
+
+    .agenda .eyebrow,
+    .agenda .section-head p {
+      color: #9df2e8;
+    }
+
+    .days {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .day {
+      min-height: 310px;
+      padding: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.17);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .day-number {
+      color: var(--gold);
+      font-size: 3rem;
+      line-height: 1;
+      font-weight: 950;
+    }
+
+    .day h3 {
+      margin: 18px 0 14px;
+      font-size: 1.4rem;
+    }
+
+    .day ul,
+    .check-list {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .day li,
+    .check-list li {
+      position: relative;
+      padding-left: 25px;
+      margin: 12px 0;
+      color: rgba(255, 255, 255, 0.76);
+      font-weight: 650;
+    }
+
+    .day li::before,
+    .check-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.68em;
+      width: 12px;
+      height: 3px;
+      background: var(--teal);
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 0.88fr) minmax(320px, 0.72fr);
+      gap: 34px;
+      align-items: start;
+    }
+
+    .info-panel {
+      padding: 30px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 14px 30px rgba(31, 35, 43, 0.06);
+    }
+
+    .info-panel h3 {
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+
+    .info-panel .check-list li {
+      color: #48505e;
+    }
+
+    .cta-band {
+      padding: 0;
+      background: linear-gradient(90deg, var(--teal-dark), var(--teal) 46%, var(--gold));
+      color: white;
+    }
+
+    .cta-inner {
+      width: min(1180px, calc(100% - 32px));
+      min-height: 260px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .cta-inner h2 {
+      margin-bottom: 12px;
+      font-size: clamp(2.2rem, 5vw, 4.4rem);
+      line-height: 0.95;
+    }
+
+    .cta-inner p {
+      max-width: 620px;
+      margin-bottom: 0;
+      font-size: 1.12rem;
+      font-weight: 700;
+    }
+
+    .form-section {
+      background:
+        linear-gradient(135deg, rgba(30, 201, 183, 0.13), transparent 34%),
+        linear-gradient(315deg, rgba(232, 90, 174, 0.1), transparent 34%),
+        var(--off-white);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      color: var(--charcoal);
+      font-size: 0.84rem;
+      font-weight: 900;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .form-status {
+      min-height: 24px;
+      color: var(--teal-dark);
+      font-weight: 800;
+    }
+
+    .reservations-panel {
+      margin-top: 28px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 14px 42px rgba(16, 20, 28, 0.08);
+    }
+
+    .reservations-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .reservations-head h3 {
+      margin-bottom: 0;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      line-height: 1;
+    }
+
+    .reservations-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .small-button {
+      min-height: 38px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--off-white);
+      color: var(--charcoal);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .small-button.danger {
+      color: #a92828;
+    }
+
+    .reservation-count {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--charcoal);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      background: var(--off-white);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .empty-reservations {
+      padding: 18px;
+      color: var(--muted);
+      font-weight: 800;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    details {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px 20px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 900;
+      color: var(--charcoal);
+    }
+
+    details p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .site-footer {
+      padding: 34px 0;
+      background: var(--ink);
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .footer-inner {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .footer-inner strong {
+      color: white;
+    }
+
+    @media (max-width: 980px) {
+      .nav {
+        min-height: auto;
+        padding: 15px 0;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        background: var(--off-white);
+      }
+
+      .hero-inner,
+      .split,
+      .cta-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-inner {
+        min-height: auto;
+        padding-top: 68px;
+      }
+
+      .hero-panel {
+        align-self: auto;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .days {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .brand {
+        min-width: auto;
+      }
+
+      .brand-logo {
+        width: clamp(118px, 36vw, 145px);
+      }
+
+      .nav-cta {
+        min-height: 42px;
+        padding: 0 12px;
+      }
+
+      h1 {
+        font-size: clamp(2.7rem, 16vw, 4.2rem);
+      }
+
+      .stats,
+      .feature-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stat {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .stat:last-child {
+        border-bottom: 0;
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      section {
+        padding: 64px 0;
+      }
+
+      .hero-panel {
+        padding: 14px;
+      }
+
+      .lab-visual {
+        min-height: 360px;
+      }
+
+      .bolt {
+        width: 86px;
+        height: 176px;
+      }
+
+      .spark-icon {
+        top: 20px;
+        width: min(76%, 230px);
+      }
+
+      .robot-card {
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+      }
+
+      .circuit-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-actions {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .reservations-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="Spark Builders home">
+        <img class="brand-logo" src="assets/spark-builders-logo.png" alt="Spark Builders">
+      </a>
+      <div class="nav-links">
+        <a href="#program">Program</a>
+        <a href="#agenda">3 Days</a>
+        <a href="#parents">Parents</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <a class="nav-cta" href="#register">Reserve</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-label="Spark Builders workshop">
+      <div class="hero-inner">
+        <div>
+          <div class="eyebrow">Casablanca | Summer 2026</div>
+          <h1>Build a <span class="highlight">robot.</span><br>Code it.</h1>
+          <p class="hero-copy">A 3-day hands-on tech workshop where kids ages 11-16 build a real working robot from scratch. No experience needed, just curiosity.</p>
+          <div class="hero-actions">
+            <a class="button" href="#register">Reserve a Seat</a>
+            <a class="button secondary" href="#agenda">See the 3-Day Plan</a>
+          </div>
+          <div class="stats" aria-label="Workshop facts">
+            <div class="stat"><strong>3</strong><span>Days</span></div>
+            <div class="stat"><strong>12</strong><span>Max students</span></div>
+            <div class="stat"><strong>11-16</strong><span>Age range</span></div>
+            <div class="stat"><strong>0</strong><span>Experience</span></div>
+          </div>
+        </div>
+        <aside class="hero-panel" aria-label="Spark Builders workshop visual">
+          <div class="lab-visual" aria-hidden="true">
+            <img class="spark-icon" src="assets/spark-builders-icon.png" alt="">
+            <div class="robot-card">
+              <div class="circuit-row">
+                <div class="circuit-chip"><strong>Build</strong><span>parts to chassis</span></div>
+                <div class="circuit-chip"><strong>Code</strong><span>logic to motion</span></div>
+                <div class="circuit-chip"><strong>Demo</strong><span>robot challenge</span></div>
+              </div>
+            </div>
+          </div>
+          <p class="panel-note">Smart, energetic, hands-on learning for kids who want to build things.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="program">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Workshop Experience</div>
+            <h2>Everything needed for a real first robotics win.</h2>
+          </div>
+          <p>Students move from curiosity to a working prototype through guided building, coding, testing, and a final demo.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature">
+            <div class="icon" aria-hidden="true">AI</div>
+            <h3>Future Skills</h3>
+            <p>Age-friendly introductions to robotics, logic, sensors, motors, and AI thinking.</p>
+          </article>
+          <article class="feature">
+            <div class="icon" aria-hidden="true">GO</div>
+            <h3>Energetic Pace</h3>
+            <p>Short challenges keep momentum high and make each success visible.</p>
+          </article>
+          <article class="feature">
+            <div class="icon" aria-hidden="true">&lt;/&gt;</div>
+            <h3>Code Confidence</h3>
+            <p>Students write simple control logic, test behavior, and debug with support.</p>
+          </article>
+          <article class="feature">
+            <div class="icon" aria-hidden="true">12</div>
+            <h3>Small Group</h3>
+            <p>A maximum of 12 students gives everyone room to ask, build, and try again.</p>
+          </article>
+          <article class="feature">
+            <div class="icon" aria-hidden="true">01</div>
+            <h3>Beginner Friendly</h3>
+            <p>No prior coding or robotics background is required for the workshop.</p>
+          </article>
+          <article class="feature">
+            <div class="icon" aria-hidden="true">*</div>
+            <h3>Final Demo</h3>
+            <p>Each team presents what they built and explains how their robot works.</p>
+          </article>
+          <article class="feature">
+            <div class="icon" aria-hidden="true">+</div>
+            <h3>Maker Mindset</h3>
+            <p>Students learn to break problems down, prototype, improve, and collaborate.</p>
+          </article>
+          <article class="feature">
+            <div class="icon" aria-hidden="true">SB</div>
+            <h3>Spark Community</h3>
+            <p>A welcoming space for curious kids to meet other builders in Casablanca.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="agenda" id="agenda">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">3-Day Plan</div>
+            <h2>From parts on the table to robot in motion.</h2>
+          </div>
+          <p>The exact daily timing can be adjusted, but the learning arc is designed for three focused workshop days.</p>
+        </div>
+        <div class="days">
+          <article class="day">
+            <div class="day-number">01</div>
+            <h3>Build the Base</h3>
+            <ul>
+              <li>Meet the robot kit and core components</li>
+              <li>Assemble the chassis, wheels, motors, and wiring</li>
+              <li>Learn safety, tools, and teamwork habits</li>
+            </ul>
+          </article>
+          <article class="day">
+            <div class="day-number">02</div>
+            <h3>Code the Brain</h3>
+            <ul>
+              <li>Connect movement to code commands</li>
+              <li>Use sensors and simple decision logic</li>
+              <li>Debug problems through testing rounds</li>
+            </ul>
+          </article>
+          <article class="day">
+            <div class="day-number">03</div>
+            <h3>Challenge and Demo</h3>
+            <ul>
+              <li>Complete a robot mission challenge</li>
+              <li>Improve speed, accuracy, and reliability</li>
+              <li>Present the build to parents and guests</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="parents">
+      <div class="section-inner split">
+        <div>
+          <div class="eyebrow">For Parents</div>
+          <h2>Clear structure, small group attention, and a project kids can explain.</h2>
+          <p class="hero-copy">Spark Builders is designed for curious students who like making, tinkering, games, robots, computers, or big questions about how technology works.</p>
+          <div class="hero-actions">
+            <a class="button" href="#register">Start Registration</a>
+            <a class="button secondary" href="#faq">Questions</a>
+          </div>
+        </div>
+        <aside class="info-panel">
+          <h3>What is included</h3>
+          <ul class="check-list">
+            <li>Three days of guided robotics and coding</li>
+            <li>All workshop tools and learning materials</li>
+            <li>Beginner-friendly support from instructors</li>
+            <li>Final challenge, demo moment, and completion certificate</li>
+            <li>Seat request follow-up with exact dates, location, and price</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="cta-band" aria-label="Seats are limited">
+      <div class="cta-inner">
+        <div>
+          <h2>Only 12 seats per group.</h2>
+          <p>Keep the workshop hands-on and personal. Collect interested families now, then confirm dates, price, and venue when the first group is ready.</p>
+        </div>
+        <a class="button secondary" href="#register">Reserve</a>
+      </div>
+    </section>
+
+    <section class="form-section" id="register">
+      <div class="section-inner split">
+        <div>
+          <div class="eyebrow">Registration</div>
+          <h2>Reserve interest for Spark Builders.</h2>
+          <p class="hero-copy">Use this starter form to collect parent details. When you have final contact details, the form can be connected to email, WhatsApp, Google Sheets, or a booking tool.</p>
+        </div>
+        <form class="info-panel" id="registrationForm">
+          <div class="form-grid">
+            <div class="field">
+              <label for="parentName">Parent name</label>
+              <input id="parentName" name="parentName" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="studentAge">Student age</label>
+              <select id="studentAge" name="studentAge" required>
+                <option value="">Select age</option>
+                <option>11</option>
+                <option>12</option>
+                <option>13</option>
+                <option>14</option>
+                <option>15</option>
+                <option>16</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="phone">Phone or WhatsApp</label>
+              <input id="phone" name="phone" autocomplete="tel" required>
+            </div>
+            <div class="field full">
+              <label for="message">Questions or preferred dates</label>
+              <textarea id="message" name="message" placeholder="Tell us anything helpful."></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="button" type="submit">Request a Seat</button>
+            <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">FAQ</div>
+            <h2>Quick answers before families sign up.</h2>
+          </div>
+        </div>
+        <div class="faq-list">
+          <details open>
+            <summary>Does my child need robotics or coding experience?</summary>
+            <p>No. The workshop is built for beginners and starts from the basics.</p>
+          </details>
+          <details>
+            <summary>What ages is Spark Builders for?</summary>
+            <p>The flyer defines the age range as 11-16. If you want younger or older groups later, the site can add separate cohorts.</p>
+          </details>
+          <details>
+            <summary>Where and when is the workshop?</summary>
+            <p>The current flyer says Casablanca, Summer 2026. Add the exact venue, dates, and daily time once confirmed.</p>
+          </details>
+          <details>
+            <summary>How many students can join?</summary>
+            <p>Each group is limited to 12 students so the workshop stays practical and instructor support stays close.</p>
+          </details>
+          <details>
+            <summary>What should students bring?</summary>
+            <p>Comfortable clothes, curiosity, and water. The workshop materials and tools can be provided on site.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><strong>Spark Builders</strong> | Where kids build the future.</div>
+      <div>Casablanca | Summer 2026 | Ages 11-16</div>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.querySelector("#registrationForm");
+    const status = document.querySelector("#formStatus");
+    const reservationsKey = "sparkBuildersReservations";
+
+    const loadReservations = () => {
+      try {
+        return JSON.parse(localStorage.getItem(reservationsKey)) || [];
+      } catch {
+        return [];
+      }
+    };
+
+    const saveReservations = (reservations) => {
+      localStorage.setItem(reservationsKey, JSON.stringify(reservations));
+    };
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const parentName = data.get("parentName").trim();
+      const studentAge = data.get("studentAge");
+      const reservation = {
+        date: new Date().toLocaleString(),
+        parentName,
+        studentAge,
+        email: data.get("email").trim(),
+        phone: data.get("phone").trim(),
+        message: data.get("message").trim()
+      };
+      const reservations = loadReservations();
+      reservations.unshift(reservation);
+      saveReservations(reservations);
+      status.textContent = `Thanks, ${parentName}. Your seat request for age ${studentAge} was saved.`;
+      form.reset();
+    });
+  </script>
+</body>
+</html>
